@@ -3,7 +3,7 @@ SSHD GeoIP Filtering script using MaxMind GeoIP2 & GeoLite2.
 
 The script were inspired by
 [Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/)
-with modification made by me to use the latest supported 'mmdblookup' utility from MaxMind instead of the outdated 'geoiplookup/geoiplookup6' utility.
+with modification made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
 
 ## GeoIP by MaxMind
 
