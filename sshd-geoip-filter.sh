@@ -13,6 +13,7 @@ fi
 
 COUNTRY=$(/usr/bin/mmdblookup --file "$MMDB_FILE" --ip "$1" country iso_code | grep -o '[^"]*' | grep -v '^[[:space:]]*$' | head -n 1)
 
+# IP Address not found i.e local ip addresses (RFC1918) or matches the allow countries will be allowed, if not it will be denied
 [[ $COUNTRY = "IP Address not found" || $ALLOW_COUNTRIES =~ $COUNTRY ]] && RESPONSE="ALLOW" || RESPONSE="DENY"
 
 if [[ "$RESPONSE" == "ALLOW" ]] ; then
