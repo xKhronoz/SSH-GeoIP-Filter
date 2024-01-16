@@ -2,7 +2,7 @@
 SSHD GeoIP Filtering script using MaxMind GeoIP2 & GeoLite2.
 
 The script was inspired by
-[Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/) & [Ryan_Harg at reinhard.codes](https://blog.reinhard.codes/2023/04/02/restricting-access-to-ssh-using-fail2ban-and-geoip/)
+[Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/) & [Ryan Harg at blog.reinhard.codes](https://blog.reinhard.codes/2023/04/02/restricting-access-to-ssh-using-fail2ban-and-geoip/)
 with modifications made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
 
 The `mmdblookup` supports both IPv4 and IPv6 addresses, and different mmdb database files such as GeoLite2-ASN.mmdb, GeoLite2-City.mmdb, GeoLite2-Country.mmdb etc depending on your subscription with MaxMind, but the free GeoLite2 would be more than enough for GeoIP filtering.
