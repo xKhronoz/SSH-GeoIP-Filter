@@ -72,3 +72,26 @@ sshd: ALL
 sshd: ALL: aclexec /usr/local/bin/sshd-geoip-filter.sh %a
 ```
 - Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts. 
+
+5. Setup Crontab to run geoipupdate
+
+```bash
+# Setup crontab as sudo
+$ sudo crontab -e
+
+# Add in the lines below, change the timezone and schedule according to your preference (Use https://crontab.guru to get the schedule)
+'''
+# Disable mailing
+MAILTO=""
+
+# CRON TIMEZONE
+CRON_TZ=Asia/Singapore
+
+# Update Maxmind GeoIP2 Database at 4am every thursday & saturday, logs to a file
+0 4 * * 4,6 /usr/bin/geoipupdate -v >> /var/log/cron.log 2>&1
+'''
+```
+
+## Compatible Operating Systems
+
+Tested on Ubuntu 22.04 and Debian, should work the same on other similar linux systems.
