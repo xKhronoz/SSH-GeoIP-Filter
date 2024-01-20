@@ -7,7 +7,7 @@ with modifications made by me to use the latest supported `mmdblookup` utility f
 
 The `mmdblookup` supports both IPv4 and IPv6 addresses, and different mmdb database files such as GeoLite2-ASN.mmdb, GeoLite2-City.mmdb, GeoLite2-Country.mmdb etc depending on your subscription with MaxMind, but the free GeoLite2 would be more than enough for GeoIP filtering.
 
-The script currently uses the `GeoLite2-Country.mmdb` file to do iso country code lookup, and could be changed depending on your needs.
+The script currently uses the `GeoLite2-Country.mmdb` file to do [two-letter country code](https://dev.maxmind.com/geoip/docs/databases/city-and-country#:~:text=City-,country_iso_code,-string%20(2)) lookup, refered to as `ISO 3166-1 alpha-2`. It could be changed depending on your needs by editing the `ALLOW_COUNTRIES` line in the script.
 
 ## GeoIP by MaxMind
 
@@ -58,12 +58,16 @@ $ sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
 $ git clone https://github.com/xKhronoz/SSHD-GeoIP-Filter.git
 ```
 
-3. Copy the script to `/usr/local/bin` & add execute permissions
+3. Copy the script to `/usr/local/bin`, add execute permissions and edit the `ALLOW_COUNTRIES` line to suit your needs:
 
 ```bash
 $ cd SSHD-GeoIP-Filter
 $ sudo cp sshd-geoip-filter.sh /usr/local/bin/
 $ sudo chmod +x /usr/local/bin/sshd-geoip-filter.sh
+
+# Edit line '5' in `sshd-geoip-filter.sh` to countries that you want to allow ssh from:
+4: # UPPERCASE space-separated ISO country codes to ACCEPT
+5: ALLOW_COUNTRIES="SG"
 ```
 
 4. Update `/etc/hosts.allow` & `/etc/hosts.deny`
@@ -77,7 +81,7 @@ sshd: ALL: aclexec /usr/local/bin/sshd-geoip-filter.sh %a
 ```
 - Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts. 
 
-5. Setup Crontab to run geoipupdate
+5. Setup Crontab to run geoipupdate:
 
 ```bash
 # Setup crontab as sudo
