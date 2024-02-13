@@ -1,7 +1,7 @@
 # SSH-GeoIP-Filter
 SSH GeoIP Filtering script using MaxMind GeoIP2 & GeoLite2 via mmdblookup.
 
-The script was orignally inspired by authors in found in Acknowledgements, with modifications made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
+The script was orignally inspired by authors in found in [Acknowledgements](#acknowledgements), with modifications made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
 
 The `mmdblookup` supports both IPv4 and IPv6 addresses, and different mmdb database files such as GeoLite2-ASN.mmdb, GeoLite2-City.mmdb, GeoLite2-Country.mmdb etc depending on your subscription with MaxMind, but the free GeoLite2 would be more than enough for GeoIP filtering.
 
@@ -102,7 +102,7 @@ CRON_TZ=Asia/Singapore
 
 Tested on Ubuntu 22.04 and Debian, should work the same on other similar linux systems.
 
-## Acknowledgements
+## Acknowledgements <a name = "acknowledgements"></a>
 
 - [CristianCantoro's ssh-geoip-filter](https://github.com/CristianCantoro/ssh-geoip-filter)
 - [Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/)
