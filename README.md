@@ -1,23 +1,21 @@
 # SSH-GeoIP-Filter
-SSHD GeoIP Filtering script using MaxMind GeoIP2 & GeoLite2.
+SSH GeoIP Filtering script using MaxMind GeoIP2 & GeoLite2 via mmdblookup.
 
-The script was inspired by
-[Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/) & [Ryan Harg at blog.reinhard.codes](https://blog.reinhard.codes/2023/04/02/restricting-access-to-ssh-using-fail2ban-and-geoip/)
-with modifications made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
+The script was orignally inspired by authors in found in Acknowledgements, with modifications made by me to use the latest supported `mmdblookup` utility from MaxMind to interact with the GeoIP2/GeoLite2 database instead of the outdated `geoiplookup/geoiplookup6` utility that only works for the GeoIP Legacy database.
 
 The `mmdblookup` supports both IPv4 and IPv6 addresses, and different mmdb database files such as GeoLite2-ASN.mmdb, GeoLite2-City.mmdb, GeoLite2-Country.mmdb etc depending on your subscription with MaxMind, but the free GeoLite2 would be more than enough for GeoIP filtering.
 
 The script currently uses the `GeoLite2-Country.mmdb` file to do [two-letter country code](https://dev.maxmind.com/geoip/docs/databases/city-and-country#:~:text=City-,country_iso_code,-string%20(2)) lookup, refered to as `ISO 3166-1 alpha-2`. It could be changed depending on your needs by editing the `ALLOW_COUNTRIES` line in the script.
 
-## GeoIP by MaxMind
+## Requirements
 
-To be able to update your GeoIP database you need to register an account
+To update your GeoIP database you need an free MaxMind License Key - register an account
 with MaxMind, see [MaxMind's docs on geoipupdate](https://dev.maxmind.com/geoip/updating-databases).
 
 You would also need to install the latest `geoipupdate` version,
 you can find the lastest version & installation instruction on [MaxMind's `geoipupdate` repo](https://github.com/maxmind/geoipupdate).
 
-From the docs, you will be able to follow the instruction to download a sample configuration file to be put at `/etc/GeoIP.conf`.
+From the docs, you will also be able to follow the instruction to download a sample configuration file to be put at `/etc/GeoIP.conf`.
 
 The `/etc/GeoIP.conf` should look like this:
 
@@ -38,9 +36,9 @@ LicenseKey YOUR_LICENSE_KEY_HERE
 EditionIDs GeoLite2-ASN GeoLite2-City GeoLite2-Country
 ```
 
-After which you can follow the instructions to add geoipupdate to crontab to update the GeoIP2/GeoLite2 database automatically.
+After which you can follow the instructions below to get started in installing the script.
 
-## How to install
+## Getting Started
 
 1. Install geoip packages:
 
@@ -81,7 +79,7 @@ sshd: ALL: aclexec /usr/local/bin/sshd-geoip-filter.sh %a
 ```
 - Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts. 
 
-5. Setup Crontab to run geoipupdate:
+5. Setup Crontab to run geoipupdate periodically:
 
 ```bash
 # Setup crontab as sudo
@@ -103,3 +101,9 @@ CRON_TZ=Asia/Singapore
 ## Compatible Operating Systems
 
 Tested on Ubuntu 22.04 and Debian, should work the same on other similar linux systems.
+
+## Acknowledgements
+
+- [CristianCantoro's ssh-geoip-filter](https://github.com/CristianCantoro/ssh-geoip-filter)
+- [Ralph Slooten at axllent.org](https://www.axllent.org/docs/view/ssh-geoip/)
+- [Ryan Harg at blog.reinhard.codes](https://blog.reinhard.codes/2023/04/02/restricting-access-to-ssh-using-fail2ban-and-geoip/)
