@@ -13,7 +13,7 @@ To update your GeoIP database you need an free MaxMind License Key - register an
 with MaxMind, see [MaxMind's docs on geoipupdate](https://dev.maxmind.com/geoip/updating-databases).
 
 You would also need to install the latest `geoipupdate` version,
-you can find the lastest version & installation instruction on [MaxMind's `geoipupdate` repo](https://github.com/maxmind/geoipupdate).
+you can find the lastest version & installation instruction on [MaxMind's geoipupdate repo](https://github.com/maxmind/geoipupdate).
 
 From the docs, you will also be able to follow the instruction to download a sample configuration file to be put at `/etc/GeoIP.conf`.
 
@@ -53,15 +53,15 @@ $ sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
 2. Clone the repo:
 
 ```bash
-$ git clone https://github.com/xKhronoz/SSHD-GeoIP-Filter.git
+$ git clone https://github.com/xKhronoz/SSH-GeoIP-Filter.git
 ```
 
 3. Copy the script to `/usr/local/bin`, add execute permissions and edit the `ALLOW_COUNTRIES` line to suit your needs:
 
 ```bash
-$ cd SSHD-GeoIP-Filter
-$ sudo cp sshd-geoip-filter.sh /usr/local/bin/
-$ sudo chmod +x /usr/local/bin/sshd-geoip-filter.sh
+$ cd SSH-GeoIP-Filter
+$ sudo cp ssh-geoip-filter.sh /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/ssh-geoip-filter.sh
 
 # Edit line '5' in `sshd-geoip-filter.sh` to countries that you want to allow ssh from:
 4: # UPPERCASE space-separated ISO country codes to ACCEPT
@@ -75,7 +75,7 @@ $ sudo chmod +x /usr/local/bin/sshd-geoip-filter.sh
 sshd: ALL
 
 # After `sudo nano /etc/hosts.allow` add in this line:
-sshd: ALL: aclexec /usr/local/bin/sshd-geoip-filter.sh %a
+sshd: ALL: aclexec /usr/local/bin/ssh-geoip-filter.sh %a
 ```
 - Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts. 
 
