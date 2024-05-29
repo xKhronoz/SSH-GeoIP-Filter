@@ -35,7 +35,8 @@ jobs:
           type: 'zip'
           filename: 'release.zip'
           exclusions: '*.git* /*.github/*'
-      - name: Create Release Ttarball File
+      # Create Blank Tarball File
+      - name: Create Release Tarball File
         run: |
           touch release.tar.gz
       # Create Tarball
