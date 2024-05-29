@@ -40,12 +40,18 @@ After which you can follow the instructions below to get started in installing t
 
 ## Getting Started
 
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. Assuming that you have already installed the required packages and have the GeoIP database setup.
+
+### Installation
+
+All commands are to be run as root or with sudo.
+
 1. Install required packages:
 
-```bash
-$ sudo apt update
-$ sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
-```
+    ```bash
+    sudo apt update
+    sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
+    ```
 
 - libmaxminddb0 libmaxminddb-dev – MaxMind Geolocation database libraries
 - mmdb-bin – binary. Program to call from the command line. Use this command to geolocate IP manually.
@@ -53,62 +59,70 @@ $ sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
 
 2. Download the latest release:
 
-```bash
-# Download the latest release
-$ wget https://github.com/xKhronoz/SSH-GeoIP-Filter/releases/latest
-```
+    ```bash
+    curl -s https://api.github.com/repos/xKhronoz/SSH-GeoIP-Filter/releases/latest \
+    | grep "tarball_url" \
+    | cut -d '"' -f 4 \
+    | wget -O xKhronoz-SSH-GeoIP-Filter-latest.tar.gz -i - \
+    && mkdir -p xKhronoz-SSH-GeoIP-Filter-latest \
+    && tar -xzf xKhronoz-SSH-GeoIP-Filter-latest.tar.gz -C xKhronoz-SSH-GeoIP-Filter-latest --strip-components=1 \
+    && rm xKhronoz-SSH-GeoIP-Filter-latest.tar.gz
+    ```
 
-3. Copy the script to `/usr/local/bin`, add execute permissions and edit the `ALLOW_COUNTRIES` line to suit your needs:
+3. Copy the script to `/usr/local/bin`, and add execute permissions:
 
-```bash
-$ cd SSH-GeoIP-Filter
-$ sudo cp ssh-geoip-filter.sh /usr/local/bin/
-$ sudo chmod +x /usr/local/bin/ssh-geoip-filter.sh
-```
+    (sshd runs as root, so it needs to be able to execute the script)
+
+    ```bash
+    cd xKhronoz-SSH-GeoIP-Filter
+    sudo cp ssh-geoip-filter.sh /usr/local/bin/
+    sudo chmod +x /usr/local/bin/ssh-geoip-filter.sh
+    ```
 
 4. Edit line *5* in `sshd-geoip-filter.sh` to countries that you want to allow ssh from, separated by space (if more than 1), in uppercase ISO country codes (e.g. `SG` for Singapore).
 
-```bash
-$ sudo nano /usr/local/bin/ssh-geoip-filter.sh
-```
+    ```bash
+    sudo nano /usr/local/bin/ssh-geoip-filter.sh
+    ```
 
-```bash
-4: # UPPERCASE space-separated ISO country codes to ACCEPT
-5: ALLOW_COUNTRIES="SG"
-```
+    ```bash
+    4: # UPPERCASE space-separated ISO country codes to ACCEPT
+    5: ALLOW_COUNTRIES="SG"
+    ```
 
 5. Update `/etc/hosts.allow` & `/etc/hosts.deny`
 
-```bash
-sudo nano /etc/hosts.deny
-# Add in this line:
-sshd: ALL
+    ```bash
+    sudo nano /etc/hosts.deny
+    # Add in this line:
+    sshd: ALL
 
-sudo nano /etc/hosts.allow
-# Add in this line:
-sshd: ALL: aclexec /usr/local/bin/ssh-geoip-filter.sh %a
-```
+    sudo nano /etc/hosts.allow
+    # Add in this line:
+    sshd: ALL: aclexec /usr/local/bin/ssh-geoip-filter.sh %a
+    ```
 
 - Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts.
 
 6. Setup Crontab to run geoipupdate periodically:
 
-```bash
-# Setup crontab as sudo
-$ sudo crontab -e
-```
+    ```bash
+    # Setup crontab as sudo
+    sudo crontab -e
+    ```
 
-```bash
-# Add in the lines below, change the timezone and schedule according to your preference (Use https://crontab.guru to get the schedule)
-# Disable mailing (Optional, remove MAILTO="" to enable mailing)
-MAILTO=""
+    Add in the lines below, change the timezone and schedule according to your preference (Use [Crontab Guru](https://crontab.guru) to set the schedule):
 
-# CRON TIMEZONE (Optional, change to your preferred timezone)
-CRON_TZ=Asia/Singapore
+    ```bash
+    # Disable mailing (Optional, remove MAILTO="" to enable mailing)
+    MAILTO=""
 
-# Update Maxmind GeoIP2 Database at 4am every thursday & saturday, logs to a file
-0 4 * * 4,6 /usr/bin/geoipupdate -v >> /var/log/cron.log 2>&1
-```
+    # CRON TIMEZONE (Optional, change to your preferred timezone)
+    CRON_TZ=Asia/Singapore
+
+    # Update Maxmind GeoIP2 Database at 4am every thursday & saturday, logs to a file
+    0 4 * * 4,6 /usr/bin/geoipupdate -v >> /var/log/cron.log 2>&1
+    ```
 
 ## Compatible Operating Systems
 

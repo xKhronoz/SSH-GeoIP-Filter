@@ -1,5 +1,7 @@
 #!/bin/bash
 # License: GNU GPLv3
+# Author:  xKhronoz (https://github.com/xKhronoz)
+# Description: This script is used to filter ssh connections based on the country of origin.
 
 # UPPERCASE space-separated ISO country codes to ACCEPT
 ALLOW_COUNTRIES="SG"
