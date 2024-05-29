@@ -40,20 +40,22 @@ After which you can follow the instructions below to get started in installing t
 
 ## Getting Started
 
-1. Install geoip packages:
+1. Install required packages:
 
 ```bash
 $ sudo apt update
 $ sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin geoipupdate
 ```
+
 - libmaxminddb0 libmaxminddb-dev – MaxMind Geolocation database libraries
 - mmdb-bin – binary. Program to call from the command line. Use this command to geolocate IP manually.
 - geoipupdate – package that assists in configuring and updating GeoIP2 / GeoLite2.
 
-2. Clone the repo:
+2. Download the latest release:
 
 ```bash
-$ git clone https://github.com/xKhronoz/SSH-GeoIP-Filter.git
+# Download the latest release
+$ wget https://github.com/xKhronoz/SSH-GeoIP-Filter/releases/latest
 ```
 
 3. Copy the script to `/usr/local/bin`, add execute permissions and edit the `ALLOW_COUNTRIES` line to suit your needs:
@@ -62,45 +64,60 @@ $ git clone https://github.com/xKhronoz/SSH-GeoIP-Filter.git
 $ cd SSH-GeoIP-Filter
 $ sudo cp ssh-geoip-filter.sh /usr/local/bin/
 $ sudo chmod +x /usr/local/bin/ssh-geoip-filter.sh
+```
 
-# Edit line '5' in `sshd-geoip-filter.sh` to countries that you want to allow ssh from:
+4. Edit line *5* in `sshd-geoip-filter.sh` to countries that you want to allow ssh from, separated by space (if more than 1), in uppercase ISO country codes (e.g. `SG` for Singapore).
+
+```bash
+$ sudo nano /usr/local/bin/ssh-geoip-filter.sh
+```
+
+```bash
 4: # UPPERCASE space-separated ISO country codes to ACCEPT
 5: ALLOW_COUNTRIES="SG"
 ```
 
-4. Update `/etc/hosts.allow` & `/etc/hosts.deny`
+5. Update `/etc/hosts.allow` & `/etc/hosts.deny`
 
 ```bash
-# After `sudo nano /etc/hosts.deny` add in this line:
+sudo nano /etc/hosts.deny
+# Add in this line:
 sshd: ALL
 
-# After `sudo nano /etc/hosts.allow` add in this line:
+sudo nano /etc/hosts.allow
+# Add in this line:
 sshd: ALL: aclexec /usr/local/bin/ssh-geoip-filter.sh %a
 ```
-- Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts. 
 
-5. Setup Crontab to run geoipupdate periodically:
+- Using aclexec in hosts.allow will allow the sshd service to take into account the exit code and abort connection attempts.
+
+6. Setup Crontab to run geoipupdate periodically:
 
 ```bash
 # Setup crontab as sudo
 $ sudo crontab -e
+```
 
+```bash
 # Add in the lines below, change the timezone and schedule according to your preference (Use https://crontab.guru to get the schedule)
-'''
-# Disable mailing
+# Disable mailing (Optional, remove MAILTO="" to enable mailing)
 MAILTO=""
 
-# CRON TIMEZONE
+# CRON TIMEZONE (Optional, change to your preferred timezone)
 CRON_TZ=Asia/Singapore
 
 # Update Maxmind GeoIP2 Database at 4am every thursday & saturday, logs to a file
 0 4 * * 4,6 /usr/bin/geoipupdate -v >> /var/log/cron.log 2>&1
-'''
 ```
 
 ## Compatible Operating Systems
 
-Tested on Ubuntu 22.04 and Debian, should work the same on other similar linux systems.
+Tested on Ubuntu 22.04 and Debian 11, should work on other similar linux systems running sshd.
+
+## TODO
+
+- [ ] Create a installation script to automate the installation process.
+- [ ] Add support to edit the 'ALLOW_COUNTRIES' by user in installation script.
 
 ## Acknowledgements <a name = "acknowledgements"></a>
 

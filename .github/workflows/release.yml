@@ -11,8 +11,6 @@ on:
       - '*'
   pull_request:
     branches: [ "main" ]
-    tags:
-      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,7 +37,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
         with:
-          tag: ${{ steps.version.outputs.version }}
+          tag: v${{ steps.version.outputs.version }}
           generateReleaseNotes: true
           makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
