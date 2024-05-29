@@ -35,13 +35,16 @@ jobs:
           type: 'zip'
           filename: 'release.zip'
           exclusions: '*.git* /*.github/*'
+      - name: Create Release Ttarball File
+        run: |
+          touch release.tar.gz
       # Create Tarball
       - name: Tarball Release
         uses: TheDoctor0/zip-release@0.7.6
         with:
           type: 'tar'
           filename: 'release.tar.gz'
-          exclusions: '.git .github release.zip'
+          exclusions: '.git .github release.zip release.tar.gz'
       # Upload the Zip Archive to releases
       - name: Upload Release
         uses: ncipollo/release-action@v1.14.0
