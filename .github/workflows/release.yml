@@ -41,7 +41,7 @@ jobs:
         with:
           type: 'tar'
           filename: 'release.tar.gz'
-          exclusions: '.git .github'
+          exclusions: '.git .github release.zip'
       # Upload the Zip Archive to releases
       - name: Upload Release
         uses: ncipollo/release-action@v1.14.0
