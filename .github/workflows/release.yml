@@ -1,6 +1,6 @@
-# This workflow creates a zip archive and uploads to releases
+# This workflow creates a new releases
 
-name: Create & Upload Release
+name: Release
 
 # Controls when the workflow will run
 on:
@@ -28,28 +28,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
-      # Create Zip Archive
-      - name: Zip Release
-        uses: TheDoctor0/zip-release@0.7.6
+      # Increment Tag Version
+      - name: Get next version
+        uses: reecetech/version-increment@2024.4.3
+        id: version
         with:
-          type: 'zip'
-          filename: 'release.zip'
-          exclusions: '*.git* /*.github/*'
-      # Create Blank Tarball File
-      - name: Create Release Tarball File
-        run: |
-          touch release.tar.gz
-      # Create Tarball
-      - name: Tarball Release
-        uses: TheDoctor0/zip-release@0.7.6
-        with:
-          type: 'tar'
-          filename: 'release.tar.gz'
-          exclusions: '.git .github release.zip release.tar.gz'
-      # Upload the Zip Archive to releases
-      - name: Upload Release
+          scheme: semver
+          increment: patch
+      # Create a New Release
+      - name: Create Release
         uses: ncipollo/release-action@v1.14.0
         with:
-          artifacts: "release.zip,release.tar.gz"
-          allowUpdates: true
+          tag: ${{ steps.version.outputs.version }}
+          generateReleaseNotes: true
+          makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
