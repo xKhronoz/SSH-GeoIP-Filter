@@ -1,14 +1,18 @@
 # This workflow creates a zip archive and uploads to releases
 
-name: Create Archive & Upload Releases
+name: Create & Upload Release
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
+    tags:
+      - '*'
   pull_request:
     branches: [ "main" ]
+    tags:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,11 +34,18 @@ jobs:
         with:
           type: 'zip'
           filename: 'release.zip'
-          exclusions: '*.git*'
+          exclusions: '*.git* /*.github/*'
+      # Create Tarball
+      - name: Tarball Release
+        uses: TheDoctor0/zip-release@0.7.6
+        with:
+          type: 'tar'
+          filename: 'release.tar.gz'
+          exclusions: '.git .github'
       # Upload the Zip Archive to releases
       - name: Upload Release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.14.0
         with:
-          artifacts: "release.zip"
+          artifacts: "release.zip,release.tar.gz"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
